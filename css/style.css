@@ -432,6 +432,11 @@ main {
     justify-content: center;
     transition: all 0.2s;
     padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    z-index: 10;
 }
 
 .btn-remove-image:hover {
@@ -447,6 +452,8 @@ main {
     gap: 15px;
     justify-content: space-between;
     align-items: center;
+    position: relative;
+    z-index: 10;
 }
 
 .btn {
@@ -458,6 +465,12 @@ main {
     transition: all 0.2s;
     font-family: inherit;
     font-weight: 500;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    position: relative;
+    z-index: 1;
 }
 
 .btn-primary {

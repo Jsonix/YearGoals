@@ -66,13 +66,13 @@
                 </label>
                 <div id="image-preview-container" class="image-preview-container" style="display: none;">
                     <img id="image-preview" src="" alt="Предпросмотр">
-                    <button type="button" class="btn-remove-image" onclick="removeImage()">×</button>
+                    <button type="button" class="btn-remove-image" id="btn-remove-image">×</button>
                 </div>
             </div>
             <div class="modal-actions">
-                <button class="btn btn-clear" id="btn-clear-goal" onclick="clearGoal()" style="display: none;">Очистить</button>
-                <button class="btn btn-secondary" onclick="closeModal()">Отмена</button>
-                <button class="btn btn-primary" onclick="saveGoal()">Сохранить</button>
+                <button class="btn btn-clear" id="btn-clear-goal" style="display: none;">Очистить</button>
+                <button class="btn btn-secondary" id="btn-cancel">Отмена</button>
+                <button class="btn btn-primary" id="btn-save">Сохранить</button>
             </div>
         </div>
     </div>
