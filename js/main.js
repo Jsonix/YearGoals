@@ -163,6 +163,49 @@ function closeModal() {
     console.log('[closeModal] Модальное окно закрыто');
 }
 
+// Сжатие изображения для уменьшения размера
+function compressImage(file, maxWidth = 800, maxHeight = 800, quality = 0.8) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+                
+                // Вычисляем новые размеры с сохранением пропорций
+                if (width > height) {
+                    if (width > maxWidth) {
+                        height = (height * maxWidth) / width;
+                        width = maxWidth;
+                    }
+                } else {
+                    if (height > maxHeight) {
+                        width = (width * maxHeight) / height;
+                        height = maxHeight;
+                    }
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
+                
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                // Конвертируем в base64 с заданным качеством
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+                console.log(`[compressImage] Изображение сжато: ${(compressedDataUrl.length / 1024).toFixed(2)}KB (было: ${(file.size / 1024).toFixed(2)}KB)`);
+                resolve(compressedDataUrl);
+            };
+            img.onerror = reject;
+            img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
 // Обработка загрузки изображения
 function handleImageUpload(event) {
     const file = event.target.files[0];
@@ -180,28 +223,28 @@ function handleImageUpload(event) {
         return;
     }
     
-    // Проверка размера файла (максимум 5MB)
-    if (file.size > 5 * 1024 * 1024) {
+    // Проверка размера файла (максимум 10MB для исходного файла)
+    if (file.size > 10 * 1024 * 1024) {
         console.warn(`[handleImageUpload] Файл слишком большой: ${(file.size / 1024 / 1024).toFixed(2)}MB`);
-        alert('Размер файла не должен превышать 5MB');
+        alert('Размер файла не должен превышать 10MB');
         return;
     }
     
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        console.log('[handleImageUpload] Изображение успешно загружено, размер base64:', e.target.result.length, 'символов');
-        const imagePreview = document.getElementById('image-preview');
-        const previewContainer = document.getElementById('image-preview-container');
-        imagePreview.src = e.target.result;
-        previewContainer.style.display = 'block';
-        document.getElementById('image-upload-text').textContent = 'Изменить изображение';
-        console.log('[handleImageUpload] Превью изображения отображено');
-    };
-    reader.onerror = function(e) {
-        console.error('[handleImageUpload] Ошибка при чтении файла:', e);
-    };
-    console.log('[handleImageUpload] Начало чтения файла как DataURL');
-    reader.readAsDataURL(file);
+    // Сжимаем изображение перед отображением
+    compressImage(file, 800, 800, 0.8)
+        .then(compressedDataUrl => {
+            console.log('[handleImageUpload] Изображение успешно сжато, размер base64:', compressedDataUrl.length, 'символов');
+            const imagePreview = document.getElementById('image-preview');
+            const previewContainer = document.getElementById('image-preview-container');
+            imagePreview.src = compressedDataUrl;
+            previewContainer.style.display = 'block';
+            document.getElementById('image-upload-text').textContent = 'Изменить изображение';
+            console.log('[handleImageUpload] Превью изображения отображено');
+        })
+        .catch(error => {
+            console.error('[handleImageUpload] Ошибка при сжатии изображения:', error);
+            alert('Ошибка при обработке изображения. Пожалуйста, попробуйте другое изображение.');
+        });
 }
 
 // Удалить изображение
@@ -334,10 +377,19 @@ function updateCounter() {
 function saveGoals() {
     try {
         const dataToSave = JSON.stringify(goals);
+        const sizeInKB = (dataToSave.length / 1024).toFixed(2);
+        const sizeInMB = (dataToSave.length / 1024 / 1024).toFixed(2);
+        console.log(`[saveGoals] Попытка сохранения в localStorage, размер данных: ${sizeInKB}KB (${sizeInMB}MB)`);
+        
         localStorage.setItem('year2026Goals', dataToSave);
-        console.log(`[saveGoals] Цели сохранены в localStorage, размер данных: ${dataToSave.length} символов`);
+        console.log(`[saveGoals] Цели успешно сохранены в localStorage`);
     } catch (e) {
         console.error('[saveGoals] Ошибка при сохранении в localStorage:', e);
+        if (e.name === 'QuotaExceededError') {
+            alert('Не удалось сохранить данные: недостаточно места в хранилище браузера. Попробуйте удалить некоторые изображения или использовать изображения меньшего размера.');
+        } else {
+            alert('Ошибка при сохранении данных. Пожалуйста, попробуйте еще раз.');
+        }
     }
 }
 
