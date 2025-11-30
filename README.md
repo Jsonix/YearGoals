@@ -34,4 +34,3 @@ YearGoals/
 - HTML5
 - CSS3 (с градиентами и анимациями)
 - Vanilla JavaScript (без фреймворков)
-
