@@ -67,13 +67,13 @@ function openGoalModal(index) {
     
     const clearButton = document.getElementById('btn-clear-goal');
     
+    title.innerHTML = 'Редактировать<br>цель';
+    
     if (goal.text) {
-        title.innerHTML = 'Редактировать<br>цель';
         input.value = goal.text;
         // Показать кнопку очистки для заполненных целей
         clearButton.style.display = 'block';
     } else {
-        title.innerHTML = '';
         input.value = '';
         // Скрыть кнопку очистки для пустых целей
         clearButton.style.display = 'none';
@@ -220,7 +220,6 @@ function renderGoals() {
                     <img src="${shapeImage}" alt="${goal.shape}" class="shape-image" 
                          onerror="console.error('Ошибка загрузки изображения:', '${shapeImage}')">
                     ${hasImage ? `<img src="${goal.image}" alt="Цель" class="goal-custom-image ${maskClass}">` : ''}
-                    <div class="goal-text">${escapeHtml(displayText)}</div>
                 </div>
             </div>
         `;

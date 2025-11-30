@@ -196,9 +196,9 @@ main {
     word-wrap: break-word;
     max-width: 85%;
     line-height: 1.4;
-    top: 50%;
+    top: calc(50% + 120px);
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     white-space: normal;
     display: block;
     width: auto;
@@ -350,12 +350,12 @@ main {
 }
 
 #modal-title {
-    max-width: 150px;
     margin-left: auto;
     margin-right: auto;
     word-wrap: break-word;
     text-align: center;
-    line-height: 1.3;
+    line-height: 1.4;
+    white-space: normal;
 }
 
 .modal-content input {
@@ -443,8 +443,10 @@ main {
 
 .modal-actions {
     display: flex;
+    flex-wrap: wrap;
     gap: 15px;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .btn {
@@ -461,6 +463,7 @@ main {
 .btn-primary {
     background: #1a4d2e;
     color: white;
+    flex: 0 0 auto;
 }
 
 .btn-primary:hover {
@@ -472,6 +475,7 @@ main {
 .btn-secondary {
     background: #6c757d;
     color: white;
+    flex: 0 0 auto;
 }
 
 .btn-secondary:hover {
@@ -481,7 +485,8 @@ main {
 .btn-clear {
     background: #dc3545;
     color: white;
-    margin-right: auto;
+    flex: 1;
+    min-width: 120px;
 }
 
 .btn-clear:hover {
